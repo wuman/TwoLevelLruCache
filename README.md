@@ -29,7 +29,7 @@ TwoLevelLruCache depends on the following libraries:
 
 * [LruCache](http://developer.android.com/reference/android/support/v4/util/LruCache.html) by [Jesse Wilson](https://plus.google.com/106557483623231970995/about)
 * [DiskLruCache](https://github.com/jakewharton/DiskLruCache) by [Google Android](https://plus.google.com/106557483623231970995/about) and [Jake Wharton](http://jakewharton.com/)
-* [Apache Commons IO](http://commons.apache.org/io/)
+* [Apache Commons IO](http://commons.apache.org/io/) (mainly for quietly closing streams, may be removed in the future)
 
 
 CONTRIBUTE
