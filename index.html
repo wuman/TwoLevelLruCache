@@ -104,28 +104,68 @@
         
         <div id="bodyColumn"  class="span9" >
                                   
-            <h1>Markdown Maven Site</h1>
+            <h1>TwoLevelLruCache</h1>
 
-<p>Congratulations! If you are looking at this page then you have successfully generated a maven site using
-the markdown syntax !</p>
+<p>A two-level LRU cache composed of a smaller, first level <code>LruCache</code> in memory 
+and a larger, second level <code>DiskLruCache</code>.</p>
 
-<p>You had added the following snippet to your <em>pom</em> file:</p>
+<p>The keys must be of <code>String</code> type. The values must be convertible to and from
+a byte stream using a <code>Converter</code>.</p>
 
-<pre><code>&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.kohsuke&lt;/groupId&gt;
-        &lt;artifactId&gt;doxia-module-markdown&lt;/artifactId&gt;
-        &lt;version&gt;1.0&lt;/version&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;
+<h2>INCLUDING IN YOUR PROJECT</h2>
+
+<p>There are two ways to include TwoLevelLruCache in your projects:</p>
+
+<ol>
+<li>You can download the released jar file in the <a href="https://github.com/wuman/TwoLevelLruCache/downloads">Downloads page</a>.</li>
+<li><p>If you use Maven to build your project you can simply add a dependency to this library.</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.wu-man&lt;/groupId&gt;
+    &lt;artifactId&gt;twolevellrucache&lt;/artifactId&gt;
+    &lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></li>
+</ol>
+
+<h2>DEPENDENCY</h2>
+
+<p>TwoLevelLruCache depends on the following libraries:</p>
+
+<ul>
+<li><a href="http://developer.android.com/reference/android/support/v4/util/LruCache.html">LruCache</a> by <a href="https://plus.google.com/106557483623231970995/about">Jesse Wilson</a></li>
+<li><a href="https://github.com/jakewharton/DiskLruCache">DiskLruCache</a> by <a href="https://plus.google.com/106557483623231970995/posts/Ein9QjNVzSL">Google Android</a> and <a href="http://jakewharton.com/">Jake Wharton</a></li>
+<li><a href="http://commons.apache.org/io/">Apache Commons IO</a> (mainly for quietly closing streams, may be removed in the future)</li>
+</ul>
+
+<h2>CONTRIBUTE</h2>
+
+<p>If you would like to contribute code to TwoLevelLruCache you can do so through 
+GitHub by forking the repository and sending a pull request.</p>
+
+<h2>DEVELOPER</h2>
+
+<ul>
+<li>David Wu <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#x64;&#x61;&#118;&#105;&#100;&#x40;&#x77;&#x75;&#45;&#109;&#x61;&#x6e;&#x2e;&#99;&#x6f;&#109;">&#100;&#97;&#118;&#105;&#x64;&#64;&#119;&#x75;&#45;&#109;&#97;&#110;&#x2e;&#x63;&#x6f;&#x6d;</a> - <a href="http://blog.wu-man.com">http://blog.wu-man.com</a></li>
+</ul>
+
+<h2>LICENSE</h2>
+
+<pre><code>Copyright 2012 David Wu
+Copyright 2011 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 </code></pre>
-
-<p>And you had generated the web site using:</p>
-
-<pre><code>mvn site
-</code></pre>
-
-<p>It has generated the web site for com.wu-man:twolevellrucache:0.1-SNAPSHOT.</p>
 
                   </div>
             </div>
