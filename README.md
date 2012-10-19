@@ -4,7 +4,8 @@ TwoLevelLruCache
 A two-level LRU cache composed of a smaller, first level `LruCache` in memory 
 and a larger, second level `DiskLruCache`.
 
-The keys must be of `String` type. The values must be `Serializable`.
+The keys must be of `String` type. The values must be convertible to and from
+a byte stream using a `Converter`.
 
 
 INCLUDING IN YOUR PROJECT

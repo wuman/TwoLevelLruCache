@@ -19,10 +19,7 @@ package com.wuman.twolevellrucache;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -37,19 +34,20 @@ import com.jakewharton.DiskLruCache.Snapshot;
  * A two-level LRU cache composed of a smaller, first level {@code LruCache} in
  * memory and a larger, second level {@code DiskLruCache}.
  * 
- * The keys must be of {@code String} type. The values must be
- * {@code Serializable}.
+ * The keys must be of {@code String} type. The values must be convertible to
+ * and from a byte stream using a {@code Converter}.
  * 
  * @author wuman
  * 
  * @param <V>
  */
-public class TwoLevelLruCache<V extends Serializable> {
+public class TwoLevelLruCache<V> {
 
     private static final int INDEX_VALUE = 0; // allow only one value per entry
 
     private final LruCache<String, V> mMemCache;
     private final DiskLruCache mDiskCache;
+    private final Converter<V> mConverter;
 
     /**
      * 
@@ -62,16 +60,25 @@ public class TwoLevelLruCache<V extends Serializable> {
      * @param maxSizeDisk
      *            the maximum number of bytes the L2 disk cache should use to
      *            store.
+     * @param converter
+     *            a {@code Converter} that is able to convert a byte stream to
+     *            and from type {@code V}.
      * @throws IOException
      */
     public TwoLevelLruCache(File directory, int appVersion, int maxSizeMem,
-	    long maxSizeDisk) throws IOException {
+	    long maxSizeDisk, Converter<V> converter) throws IOException {
 	super();
 
 	if (maxSizeMem >= maxSizeDisk) {
 	    throw new IllegalArgumentException(
 		    "It makes more sense to have a larger second-level disk cache.");
 	}
+
+	if (converter == null) {
+	    throw new IllegalArgumentException("A converter must be submitted.");
+	}
+
+	mConverter = converter;
 
 	mMemCache = new LruCache<String, V>(maxSizeMem) {
 
@@ -108,25 +115,20 @@ public class TwoLevelLruCache<V extends Serializable> {
 	if (value == null) {
 	    Snapshot snapshot = null;
 	    InputStream in = null;
-	    ObjectInputStream oin = null;
 	    try {
 		snapshot = mDiskCache.get(key);
 		if (snapshot != null) {
 		    in = snapshot.getInputStream(INDEX_VALUE);
-		    oin = new ObjectInputStream(in);
-		    value = (V) oin.readObject();
+		    byte[] bytes = IOUtils.toByteArray(in);
+		    value = mConverter.from(bytes);
 		}
 	    } catch (IOException e) {
-		System.out.println("Unable to get entry from disk cache. key: "
-			+ key);
-	    } catch (ClassNotFoundException e) {
 		System.out.println("Unable to get entry from disk cache. key: "
 			+ key);
 	    } catch (Exception e) {
 		System.out.println("Unable to get entry from disk cache. key: "
 			+ key);
 	    } finally {
-		IOUtils.closeQuietly(oin);
 		IOUtils.closeQuietly(in);
 		IOUtils.closeQuietly(snapshot);
 	    }
@@ -163,18 +165,15 @@ public class TwoLevelLruCache<V extends Serializable> {
     private void putToDiskQuietly(String key, V newValue) {
 	Editor editor = null;
 	OutputStream out = null;
-	ObjectOutputStream oout = null;
 	try {
 	    editor = mDiskCache.edit(key);
 	    out = editor.newOutputStream(INDEX_VALUE);
-	    oout = new ObjectOutputStream(out);
-	    oout.writeObject(newValue);
+	    mConverter.toStream(newValue, out);
 	    editor.commit();
 	} catch (IOException e) {
 	    System.out
 		    .println("Unable to put entry to disk cache. key: " + key);
 	} finally {
-	    IOUtils.closeQuietly(oout);
 	    IOUtils.closeQuietly(out);
 	    quietlyAbortUnlessCommitted(editor);
 	}
@@ -450,6 +449,20 @@ public class TwoLevelLruCache<V extends Serializable> {
      */
     public synchronized void close() throws IOException {
 	mDiskCache.close();
+    }
+
+    /**
+     * Convert a byte stream to and from a concrete type.
+     * 
+     * @param <T>
+     *            Object type.
+     */
+    public static interface Converter<T> {
+	/** Converts bytes to an object. */
+	T from(byte[] bytes) throws IOException;
+
+	/** Converts o to bytes written to the specified stream. */
+	void toStream(T o, OutputStream bytes) throws IOException;
     }
 
 }
