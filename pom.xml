@@ -38,6 +38,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <github.global.server>github</github.global.server>
 
+        <maven.version>3.0.3</maven.version>
         <java.version>1.6</java.version>
         <junit.version>4.10</junit.version>
         <maven-compiler.version>2.5.1</maven-compiler.version>
@@ -206,7 +207,7 @@
     </scm>
 
     <prerequisites>
-        <maven>3.0.3</maven>
+        <maven>${maven.version}</maven>
     </prerequisites>
 
     <distributionManagement>
