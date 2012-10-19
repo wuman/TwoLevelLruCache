@@ -151,6 +151,15 @@ public class TwoLevelLruCache<V extends Serializable> {
 	return oldValue;
     }
 
+    private void removeFromDiskQuietly(String key) {
+	try {
+	    mDiskCache.remove(key);
+	} catch (IOException e) {
+	    System.out.println("Unable to remove entry from disk cache. key: "
+		    + key);
+	}
+    }
+
     private void putToDiskQuietly(String key, V newValue) {
 	Editor editor = null;
 	OutputStream out = null;
@@ -189,23 +198,15 @@ public class TwoLevelLruCache<V extends Serializable> {
      */
     public final V remove(String key) {
 	V oldValue = mMemCache.remove(key);
-	try {
-	    mDiskCache.remove(key);
-	} catch (IOException e) {
-	    System.out.println("Unable to remove entry from disk cache. key: "
-		    + key);
-	}
+	removeFromDiskQuietly(key);
 	return oldValue;
     }
 
     private void wrapEntryRemoved(boolean evicted, String key, V oldValue,
 	    V newValue) {
 	entryRemoved(evicted, key, oldValue, newValue);
-	try {
-	    mDiskCache.remove(key);
-	} catch (IOException e) {
-	    System.out.println("Unable to remove entry from disk cache. key: "
-		    + key);
+	if (!evicted) {
+	    removeFromDiskQuietly(key);
 	}
     }
 
