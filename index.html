@@ -33,7 +33,8 @@
 <p>A two-level LRU cache composed of a smaller, first level <code>LruCache</code> in memory 
 and a larger, second level <code>DiskLruCache</code>.</p>
 
-<p>The keys must be of <code>String</code> type. The values must be <code>Serializable</code>.</p>
+<p>The keys must be of <code>String</code> type. The values must be convertible to and from
+a byte stream using a <code>Converter</code>.</p>
 
 <h2>INCLUDING IN YOUR PROJECT</h2>
 
