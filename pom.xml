@@ -45,8 +45,8 @@
         <maven-javadoc.version>2.9</maven-javadoc.version>
         <maven-release.version>2.3.2</maven-release.version>
         <maven-gpg.version>1.4</maven-gpg.version>
-        <downloads-maven.version>0.6</downloads-maven.version>
-        <site-maven.version>0.6</site-maven.version>
+        <github-downloads.version>0.6</github-downloads.version>
+        <github-site-upload.version>0.6</github-site-upload.version>
 
         <disklrucache.version>1.2.0</disklrucache.version>
         <commons-io.version>2.4</commons-io.version>
@@ -117,7 +117,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>downloads-maven-plugin</artifactId>
-                <version>${downloads-maven.version}</version>
+                <version>${github-downloads.version}</version>
                 <configuration>
                     <description>${project.version} release of
                         ${project.name}</description>
@@ -136,7 +136,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>${site-maven.version}</version>
+                <version>${github-site-upload.version}</version>
                 <configuration>
                     <message>Creating site for ${project.version}</message>
                 </configuration>
