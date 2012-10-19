@@ -139,6 +139,7 @@
                 <version>${github-site-upload.version}</version>
                 <configuration>
                     <message>Creating site for ${project.version}</message>
+                    <outputDirectory>src/site</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
