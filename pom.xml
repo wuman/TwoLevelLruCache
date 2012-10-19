@@ -24,6 +24,12 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -52,6 +58,7 @@
 
         <disklrucache.version>1.2.0</disklrucache.version>
         <commons-io.version>2.4</commons-io.version>
+        <gson.version>2.2.2</gson.version>
     </properties>
 
     <build>
