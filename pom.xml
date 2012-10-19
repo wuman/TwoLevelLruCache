@@ -43,6 +43,7 @@
         <maven-compiler.version>2.5.1</maven-compiler.version>
         <maven-source.version>2.2.1</maven-source.version>
         <maven-javadoc.version>2.9</maven-javadoc.version>
+        <maven-eclipse.version>2.9</maven-eclipse.version>
         <maven-release.version>2.3.2</maven-release.version>
         <maven-gpg.version>1.4</maven-gpg.version>
         <github-downloads.version>0.6</github-downloads.version>
@@ -88,6 +89,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>${maven-eclipse.version}</version>
+                <configuration>
+                    <downloadJavadocs>true</downloadJavadocs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
