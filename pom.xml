@@ -45,9 +45,6 @@
         <maven-javadoc.version>2.9</maven-javadoc.version>
         <maven-release.version>2.3.2</maven-release.version>
         <maven-gpg.version>1.4</maven-gpg.version>
-        <maven-site.version>3.1</maven-site.version>
-        <maven-project-info-reports.version>2.5.1</maven-project-info-reports.version>
-        <markdown.version>1.0</markdown.version>
         <github-downloads.version>0.6</github-downloads.version>
         <github-site-upload.version>0.6</github-site-upload.version>
 
@@ -152,45 +149,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>${maven-site.version}</version>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.kohsuke</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>${markdown.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${maven-project-info-reports.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                            <report>dependencies</report>
-                            <report>issue-tracking</report>
-                            <report>license</report>
-                            <report>scm</report>
-                            <report>summary</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <name>TwoLevelLruCache</name>
     <description>A two-level LRU cache composed of a smaller L1 cache in memory and a larger L2 cache on disk.</description>
