@@ -50,8 +50,8 @@
         <maven-source.version>2.2.1</maven-source.version>
         <maven-javadoc.version>2.9</maven-javadoc.version>
         <maven-eclipse.version>2.9</maven-eclipse.version>
-        <maven-release.version>2.3.2</maven-release.version>
         <maven-gpg.version>1.4</maven-gpg.version>
+        <maven-release.version>2.3.2</maven-release.version>
         <github-downloads.version>0.6</github-downloads.version>
         <github-site-upload.version>0.6</github-site-upload.version>
 
@@ -111,6 +111,7 @@
                 <version>${maven-release.version}</version>
                 <configuration>
                     <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                    <releaseProfiles>release-sign-artifacts</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
