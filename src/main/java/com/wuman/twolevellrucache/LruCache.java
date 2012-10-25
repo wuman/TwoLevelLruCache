@@ -329,7 +329,7 @@ public class LruCache<K, V> {
         int accesses = hitCount + missCount;
         int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
         return String
-                .format("LruCache[size=%d,%d,maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]",
+                .format("LruCache[maxSize=%d,size=%d/%d,hits=%d,misses=%d,hitRate=%d%%]",
                         maxSize, map.size(), size, hitCount, missCount,
                         hitPercent);
     }

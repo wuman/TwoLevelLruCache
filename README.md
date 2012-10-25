@@ -19,7 +19,7 @@ There are two ways to include TwoLevelLruCache in your projects:
         <dependency>
             <groupId>com.wu-man</groupId>
             <artifactId>twolevellrucache</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
         </dependency>
 
 
