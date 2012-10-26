@@ -48,6 +48,40 @@ public class TwoLevelLruCache<V> {
     private final Converter<V> mConverter;
 
     /**
+     * Constructor for TwoLevelLruCache. Use this constructor if only the first
+     * level memory cache is needed.
+     * 
+     * @param maxSizeMem
+     */
+    public TwoLevelLruCache(int maxSizeMem) {
+        super();
+
+        mDiskCache = null;
+        mConverter = null;
+        mMemCache = new LruCache<String, V>(maxSizeMem) {
+
+            @Override
+            protected void entryRemoved(boolean evicted, String key,
+                    V oldValue, V newValue) {
+                wrapEntryRemoved(evicted, key, oldValue, newValue);
+            }
+
+            @Override
+            protected V create(String key) {
+                return wrapCreate(key);
+            }
+
+            @Override
+            protected int sizeOf(String key, V value) {
+                return wrapSizeOf(key, value);
+            }
+
+        };
+    }
+
+    /**
+     * Constructor for TwoLevelLruCache. Use this constructor if the second
+     * level disk cache is to be enabled.
      * 
      * @param directory
      *            a writable directory for the L2 disk cache.
@@ -110,7 +144,7 @@ public class TwoLevelLruCache<V> {
     @SuppressWarnings("unchecked")
     public final V get(String key) {
         V value = mMemCache.get(key);
-        if (value == null) {
+        if (mDiskCache != null && value == null) {
             Snapshot snapshot = null;
             InputStream in = null;
             try {
@@ -152,6 +186,9 @@ public class TwoLevelLruCache<V> {
     }
 
     private void removeFromDiskQuietly(String key) {
+        if (mDiskCache == null) {
+            return;
+        }
         try {
             mDiskCache.remove(key);
         } catch (IOException e) {
@@ -161,6 +198,9 @@ public class TwoLevelLruCache<V> {
     }
 
     private void putToDiskQuietly(String key, V newValue) {
+        if (mDiskCache == null) {
+            return;
+        }
         Editor editor = null;
         OutputStream out = null;
         try {
@@ -300,7 +340,7 @@ public class TwoLevelLruCache<V> {
      * @return size
      */
     public synchronized final long sizeDisk() {
-        return mDiskCache.size();
+        return mDiskCache == null ? 0 : mDiskCache.size();
     }
 
     /**
@@ -319,7 +359,7 @@ public class TwoLevelLruCache<V> {
      * @return maxSize
      */
     public synchronized final long maxSizeDisk() {
-        return mDiskCache.getMaxSize();
+        return mDiskCache == null ? 0L : mDiskCache.getMaxSize();
     }
 
     /**
@@ -349,7 +389,9 @@ public class TwoLevelLruCache<V> {
      * @throws IOException
      */
     public final void evictAllDisk() throws IOException {
-        mDiskCache.delete();
+        if (mDiskCache != null) {
+            mDiskCache.delete();
+        }
     }
 
     /**
@@ -419,7 +461,7 @@ public class TwoLevelLruCache<V> {
      * @return directory
      */
     public final File getDirectory() {
-        return mDiskCache.getDirectory();
+        return mDiskCache == null ? null : mDiskCache.getDirectory();
     }
 
     /**
@@ -428,7 +470,7 @@ public class TwoLevelLruCache<V> {
      * @return closed
      */
     public boolean isClosed() {
-        return mDiskCache.isClosed();
+        return mDiskCache == null ? true : mDiskCache.isClosed();
     }
 
     /**
@@ -437,7 +479,9 @@ public class TwoLevelLruCache<V> {
      * @throws IOException
      */
     public synchronized void flush() throws IOException {
-        mDiskCache.flush();
+        if (mDiskCache != null) {
+            mDiskCache.flush();
+        }
     }
 
     /**
@@ -446,7 +490,9 @@ public class TwoLevelLruCache<V> {
      * @throws IOException
      */
     public synchronized void close() throws IOException {
-        mDiskCache.close();
+        if (mDiskCache != null) {
+            mDiskCache.close();
+        }
     }
 
     /**
