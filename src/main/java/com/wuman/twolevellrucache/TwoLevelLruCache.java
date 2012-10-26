@@ -205,9 +205,11 @@ public class TwoLevelLruCache<V> {
         OutputStream out = null;
         try {
             editor = mDiskCache.edit(key);
-            out = editor.newOutputStream(INDEX_VALUE);
-            mConverter.toStream(newValue, out);
-            editor.commit();
+            if (editor != null) {
+                out = editor.newOutputStream(INDEX_VALUE);
+                mConverter.toStream(newValue, out);
+                editor.commit();
+            }
         } catch (IOException e) {
             System.out
                     .println("Unable to put entry to disk cache. key: " + key);
