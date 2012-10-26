@@ -3,7 +3,7 @@
 
     <groupId>com.wu-man</groupId>
     <artifactId>twolevellrucache</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -193,7 +193,7 @@
         <url>https://github.com/wuman/TwoLevelLruCache</url>
         <connection>scm:git:git://github.com/wuman/TwoLevelLruCache.git</connection>
         <developerConnection>scm:git:git@github.com:wuman/TwoLevelLruCache.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>twolevellrucache-0.6</tag>
     </scm>
 
     <prerequisites>
