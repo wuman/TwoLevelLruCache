@@ -34,39 +34,39 @@ public class TwoLevelLruCacheTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-	super.setUp();
-	javaTmpDir = System.getProperty("java.io.tmpdir");
-	cacheDir = new File(javaTmpDir, "TwoLevelLruCacheTest");
-	cacheDir.mkdir();
-	for (File file : cacheDir.listFiles()) {
-	    file.delete();
-	}
-	gson = new GsonBuilder().create();
-	converter = new GsonConverter<String>(gson, String.class);
-	cache = new TwoLevelLruCache<String>(cacheDir, appVersion,
-		Integer.MAX_VALUE, Long.MAX_VALUE, converter);
+        super.setUp();
+        javaTmpDir = System.getProperty("java.io.tmpdir");
+        cacheDir = new File(javaTmpDir, "TwoLevelLruCacheTest");
+        cacheDir.mkdir();
+        for (File file : cacheDir.listFiles()) {
+            file.delete();
+        }
+        gson = new GsonBuilder().create();
+        converter = new GsonConverter<String>(gson, String.class);
+        cache = new TwoLevelLruCache<String>(cacheDir, appVersion,
+                Integer.MAX_VALUE, Long.MAX_VALUE, converter);
     }
 
     @Override
     protected void tearDown() throws Exception {
-	cache.close();
-	super.tearDown();
+        cache.close();
+        super.tearDown();
     }
 
     public void testWriteAndReadEntry() throws Exception {
-	cache.put("k1", "ABC");
-	String value = cache.get("k1");
-	assertEquals("ABC", value);
+        cache.put("k1", "ABC");
+        String value = cache.get("k1");
+        assertEquals("ABC", value);
     }
 
     public void testReadAndWriteEntryAcrossCacheOpenAndClose() throws Exception {
-	cache.put("k1", "A");
-	cache.close();
+        cache.put("k1", "A");
+        cache.close();
 
-	cache = new TwoLevelLruCache<String>(cacheDir, appVersion,
-		Integer.MAX_VALUE, Long.MAX_VALUE, converter);
-	String value = cache.get("k1");
-	assertEquals("A", value);
+        cache = new TwoLevelLruCache<String>(cacheDir, appVersion,
+                Integer.MAX_VALUE, Long.MAX_VALUE, converter);
+        String value = cache.get("k1");
+        assertEquals("A", value);
     }
 
 }
