@@ -469,7 +469,7 @@ public class TwoLevelLruCache<V> {
      * 
      * @return closed
      */
-    public boolean isClosed() {
+    public final boolean isClosed() {
         return mDiskCache == null ? true : mDiskCache.isClosed();
     }
 
@@ -478,7 +478,7 @@ public class TwoLevelLruCache<V> {
      * 
      * @throws IOException
      */
-    public synchronized void flush() throws IOException {
+    public synchronized final void flush() throws IOException {
         if (mDiskCache != null) {
             mDiskCache.flush();
         }
@@ -489,7 +489,7 @@ public class TwoLevelLruCache<V> {
      * 
      * @throws IOException
      */
-    public synchronized void close() throws IOException {
+    public synchronized final void close() throws IOException {
         if (mDiskCache != null) {
             mDiskCache.close();
         }
