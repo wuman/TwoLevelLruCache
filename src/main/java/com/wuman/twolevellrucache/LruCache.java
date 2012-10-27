@@ -328,9 +328,10 @@ public class LruCache<K, V> {
     public synchronized final String toString() {
         int accesses = hitCount + missCount;
         int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
+        int sizePercent = maxSize != 0 ? (100 * size / maxSize) : 0;
         return String
-                .format("LruCache[maxSize=%d,size=%d/%d,hits=%d,misses=%d,hitRate=%d%%]",
-                        maxSize, map.size(), size, hitCount, missCount,
-                        hitPercent);
+                .format("LruCache[maxSize=%d,size=%d/%d/%d%%,hits=%d,misses=%d,puts=%d,hitRate=%d%%]",
+                        maxSize, map.size(), size, sizePercent, hitCount,
+                        missCount, putCount, hitPercent);
     }
 }
