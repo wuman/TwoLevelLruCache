@@ -137,6 +137,14 @@ public class LruCache<K, V> {
         return previous;
     }
 
+    public final void setMaxSize(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("maxSize <= 0");
+        }
+        this.maxSize = maxSize;
+        trimToSize(maxSize);
+    }
+
     /**
      * @param maxSize
      *            the maximum size of the cache before returning. May be -1 to
