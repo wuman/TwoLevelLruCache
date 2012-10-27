@@ -263,6 +263,13 @@ public class LruCache<K, V> {
     }
 
     /**
+     * Clears all debug stats
+     */
+    public final void clearStats() {
+        putCount = createCount = evictionCount = hitCount = missCount = 0;
+    }
+
+    /**
      * For caches that do not override {@link #sizeOf}, this returns the number
      * of entries in the cache. For all other caches, this returns the sum of
      * the sizes of the entries in this cache.
