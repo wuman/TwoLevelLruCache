@@ -1,6 +1,8 @@
 TwoLevelLruCache
 ================
 
+![Feature Image](https://raw.github.com/wuman/TwoLevelLruCache/master/src/site/twolevellrucache_logo.png)
+
 A two-level LRU cache composed of a smaller, first level `LruCache` in memory 
 and a larger, second level `DiskLruCache`.
 
