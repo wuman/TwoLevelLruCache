@@ -24,9 +24,9 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
-import com.jakewharton.DiskLruCache;
-import com.jakewharton.DiskLruCache.Editor;
-import com.jakewharton.DiskLruCache.Snapshot;
+import com.jakewharton.disklrucache.DiskLruCache;
+import com.jakewharton.disklrucache.DiskLruCache.Editor;
+import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
 
 /**
  * A two-level LRU cache composed of a smaller, first level {@code LruCache} in

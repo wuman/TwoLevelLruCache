@@ -55,7 +55,7 @@
         <github-downloads.version>0.6</github-downloads.version>
         <github-site-upload.version>0.6</github-site-upload.version>
 
-        <disklrucache.version>1.2.1</disklrucache.version>
+        <disklrucache.version>2.0.2</disklrucache.version>
         <commons-io.version>2.4</commons-io.version>
         <gson.version>2.2.4</gson.version>
     </properties>
