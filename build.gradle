@@ -1,0 +1,211 @@
+ext {
+  compileSdkVersion = 17
+  buildToolsVersion = '19.1.0'
+
+  versionName = computeVersionName()
+  version = computeVersion()
+  println 'versionName: ' + versionName
+  println 'version: ' + version
+}
+
+buildscript {
+  repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:0.11.+'
+    classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.10.+'
+    classpath 'org.robolectric:robolectric-gradle-plugin:0.11.0'
+    classpath 'com.github.dcendents:android-maven-plugin:1.0'
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+apply plugin: 'android-sdk-manager'
+apply plugin: 'android-library'
+apply plugin: 'robolectric'
+apply plugin: 'android-maven'
+apply plugin: 'signing'
+apply plugin: 'idea'
+
+idea {
+  module {
+    testOutputDir = file('build/test-classes/debug')
+  }
+}
+
+dependencies {
+  compile 'com.jakewharton:disklrucache:2.0.2'
+  compile 'commons-io:commons-io:2.4'
+
+  androidTestCompile 'junit:junit:4.11'
+  androidTestCompile('com.squareup:fest-android:1.+@aar')
+  androidTestCompile 'com.google.code.gson:gson:2.2.2'
+}
+
+android {
+  compileSdkVersion project.compileSdkVersion
+  buildToolsVersion project.buildToolsVersion
+
+  lintOptions {
+    // temporary fix for https://code.google.com/p/android/issues/detail?id=64014
+    disable 'InvalidPackage'
+  }
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      res.srcDirs = ['res']
+    }
+    androidTest {
+      setRoot('src/test')
+    }
+  }
+}
+
+robolectric {
+  include '**/**Test.class'
+}
+
+android.libraryVariants.all { variant ->
+  def name = variant.buildType.name
+  if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+    // skip debug builds
+    return;
+  }
+  task("javadoc${variant.name.capitalize()}", type: Javadoc) {
+    description "Generates Javadoc for $variant.name."
+    source = variant.javaCompile.source
+    ext.androidJar = android.sdkDirectory.path + "/platforms/${android.compileSdkVersion}/android.jar"
+    System.out.println("testing: " + ext.androidJar)
+    classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+  }
+
+  task("bundleJavadoc${variant.name.capitalize()}", type: Jar) {
+    description "Bundles Javadoc into zip for $variant.name."
+    classifier = "javadoc"
+    from tasks["javadoc${variant.name.capitalize()}"]
+  }
+}
+
+task jar(type: Jar) {
+  from 'build/intermediates/classes/release'
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from android.sourceSets.main.java.srcDirs
+}
+
+task javadocJar(type: Jar, dependsOn: "javadocRelease") {
+  classifier = 'javadoc'
+  from 'build/docs/javadoc'
+}
+
+artifacts {
+  archives jar
+  archives sourcesJar
+  archives javadocJar
+}
+
+if (project.hasProperty('signing.secretKeyRingFile') && project.hasProperty('signing.keyId')) {
+  signing {
+    sign configurations.archives
+  }
+}
+
+if (project.hasProperty('SONATYPE_USERNAME') && project.hasProperty('SONATYPE_PASSWORD')) {
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    
+        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+          authentication(userName: SONATYPE_USERNAME, password: SONATYPE_PASSWORD)
+        }
+
+        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+          authentication(userName: SONATYPE_USERNAME, password: SONATYPE_PASSWORD)
+        }
+    
+        pom.project {
+          name 'Two-Level LRU Cache'
+          groupId 'com.wu-man'
+          artifactId 'twolevellrucache'
+          version project.ext.version
+          packaging 'jar', 'aar'
+          description 'A two-level LRU cache composed of a smaller L1 cache in memory and a larger L2 cache on disk'
+          url 'http://wuman.github.com/twolevellrucache/'
+          inceptionYear '2013'
+      
+          scm {
+            url 'https://github.com/wuman/twolevellrucache'
+            connection 'scm:git:git://github.com/wuman/twolevellrucache.git'
+            developerConnection 'scm:git:git@github.com:wuman/twolevellrucache.git'
+          }
+      
+          licenses {
+            license {
+              name 'Apache License Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              distribution 'repo'
+            }
+          }
+      
+          developers {
+            developer {
+              id 'wuman'
+              name 'David Wu'
+              url 'http://blog.wu-man.com'
+              email 'david@wu-man.com'
+              timezone '+8'
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+def computeVersionName() {
+  def lastGitTag = "git describe --tags HEAD".execute().text
+  def tagMatcher = lastGitTag =~ /^twolevellrucache-(.*)/
+  if (tagMatcher) {
+    lastGitTag = tagMatcher[0][1]
+  } else {
+    return "0.0.1-SNAPSHOT"
+  }
+  def snapshotMatcher = lastGitTag =~ /^[^-]*-[^-]*-g/
+  if (snapshotMatcher) {
+    "${lastGitTag}-SNAPSHOT"
+  } else {
+    lastGitTag
+  }
+}
+
+def computeVersion() {
+  def lastVersion = "git describe --tags --abbrev=0".execute().text
+  def matcher = lastVersion =~ /^twolevellrucache-(.*)/
+  lastVersion = matcher ? matcher[0][1] : "0.0.0"
+  def parts = lastVersion.split("\\.", 3)
+  def versionName = computeVersionName()
+  if (versionName.endsWith('-SNAPSHOT')) {
+    parts[2] = Integer.toString(parts[2].toInteger() + 1)
+    parts[0] + '.' + parts[1] + '.' + parts[2] + '-SNAPSHOT'
+  } else {
+    lastVersion
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.12'
+}
+
+tasks.withType(Compile) {
+  options.encoding = "UTF-8"
+}
+

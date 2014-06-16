@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- placeholder for android library -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.wuman.twolevellrucache"
+    android:versionCode="001"
+    android:versionName="0.0.1-SNAPSHOT" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="17" />
+
+    <application></application>
+
+</manifest>
