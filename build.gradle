@@ -44,7 +44,7 @@ dependencies {
 
   androidTestCompile 'junit:junit:4.11'
   androidTestCompile('com.squareup:fest-android:1.+@aar')
-  androidTestCompile 'com.google.code.gson:gson:2.2.2'
+  androidTestCompile 'com.google.code.gson:gson:2.2.4'
 }
 
 android {
