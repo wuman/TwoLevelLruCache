@@ -16,17 +16,17 @@
 
 package com.wuman.twolevellrucache;
 
+import com.jakewharton.disklrucache.DiskLruCache;
+import com.jakewharton.disklrucache.DiskLruCache.Editor;
+import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
+
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-
-import com.jakewharton.disklrucache.DiskLruCache;
-import com.jakewharton.disklrucache.DiskLruCache.Editor;
-import com.jakewharton.disklrucache.DiskLruCache.Snapshot;
 
 /**
  * A two-level LRU cache composed of a smaller, first level {@code LruCache} in
@@ -160,6 +160,9 @@ public class TwoLevelLruCache<V> {
             } catch (Exception e) {
                 System.out.println("Unable to get entry from disk cache. key: "
                         + key);
+            } catch (OutOfMemoryError e) {
+                System.out.println("Unable to get entry from disk cache. key: "
+                    + key);
             } finally {
                 IOUtils.closeQuietly(in);
                 IOUtils.closeQuietly(snapshot);
